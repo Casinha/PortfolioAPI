@@ -41,7 +41,7 @@ export const parseQuery = (req: Request, res: Response, next: NextFunction) => {
                 query.filters.push({
                     property: prop,
                     lhs: filterDetails[2] as FilterLHS,
-                    value: filterDetails[3]
+                    value: filterDetails[3].replace(/"/g, "")
                 })
                 break
         }
@@ -153,7 +153,7 @@ export const fetchManyResult = (trees: ITree[], query: TreeQuery): IQueryTree[] 
         .map(tree => applySelect(query.select, tree))
 
     const sortedTrees = applySort(filteredTrees, query.sort)
-    return sortedTrees.slice(0, query.limit)
+    return query.limit ? sortedTrees.slice(0, query.limit) : sortedTrees
 }
 
 export const isDate = (v: any): boolean => {
